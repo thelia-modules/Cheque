@@ -25,7 +25,6 @@ namespace Cheque;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Thelia\Model\Country;
 use Thelia\Module\BaseModule;
 use Thelia\Module\PaymentModuleInterface;
 
@@ -71,6 +70,11 @@ class Cheque extends BaseModule implements PaymentModuleInterface
     public function destroy()
     {
         // TODO: Implement destroy() method.
+    }
+
+    public function getCode()
+    {
+        return 'Cheque';
     }
 
 }
