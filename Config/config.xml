@@ -20,6 +20,9 @@
             <argument type="service" id="mailer"/>
             <tag name="kernel.event_subscriber"/>
         </service>
+        <service id="cheque.listener" class="Cheque\Listener\ConfigListener">
+            <tag name="kernel.event_subscriber" event="module.config" method="onModuleConfig"/>
+        </service>
     </services>
 
 </config>
