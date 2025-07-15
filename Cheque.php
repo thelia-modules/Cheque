@@ -13,6 +13,7 @@
 namespace Cheque;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Thelia\Install\Database;
 use Thelia\Model\MessageQuery;
 use Thelia\Model\Order;
@@ -22,9 +23,9 @@ class Cheque extends AbstractPaymentModule
 {
     public const MESSAGE_DOMAIN = 'Cheque';
 
-    public function pay(Order $order): void
+    public function pay(Order $order): Response
     {
-        // Nothing special to to.
+        return new Response('');
     }
 
     /**
@@ -35,7 +36,7 @@ class Cheque extends AbstractPaymentModule
      *
      * @return bool
      */
-    public function isValidPayment()
+    public function isValidPayment(): bool
     {
         return $this->getCurrentOrderTotalAmount() > 0;
     }
@@ -64,7 +65,7 @@ class Cheque extends AbstractPaymentModule
      *
      * @return bool
      */
-    public function manageStockOnCreation()
+    public function manageStockOnCreation(): bool
     {
         return false;
     }
