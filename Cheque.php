@@ -14,7 +14,7 @@ namespace Cheque;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Thelia\Install\Database;
+use Thelia\Core\Install\Database;
 use Thelia\Model\MessageQuery;
 use Thelia\Model\Order;
 use Thelia\Module\AbstractPaymentModule;
@@ -23,25 +23,23 @@ class Cheque extends AbstractPaymentModule
 {
     public const MESSAGE_DOMAIN = 'Cheque';
 
-    public function pay(Order $order): Response
+    public function pay(Order $order): ?Response
     {
-        return new Response('');
+        return null;
     }
 
     /**
      * This method is call on Payment loop.
      *
      * If you return true, the payment method will de display
-     * If you return false, the payment method will not be display
-     *
-     * @return bool
+     * If you return false, the payment method will not be displayed
      */
     public function isValidPayment(): bool
     {
         return $this->getCurrentOrderTotalAmount() > 0;
     }
 
-    public function postActivation(ConnectionInterface $con = null): void
+    public function postActivation(?ConnectionInterface $con = null): void
     {
         $database = new Database($con);
 
@@ -49,7 +47,7 @@ class Cheque extends AbstractPaymentModule
         $database->insertSql(null, [__DIR__.'/Config/setup.sql']);
     }
 
-    public function destroy(ConnectionInterface $con = null, $deleteModuleData = false): void
+    public function destroy(?ConnectionInterface $con = null, $deleteModuleData = false): void
     {
         // Delete our message
         if (null !== $message = MessageQuery::create()->findOneByName('order_confirmation_cheque')) {
@@ -60,10 +58,8 @@ class Cheque extends AbstractPaymentModule
     }
 
     /**
-     * if you want, you can manage stock in your module instead of order process.
+     * if you want, you can manage stock in your module instead of an order process.
      * Return false if you want to manage yourself the stock.
-     *
-     * @return bool
      */
     public function manageStockOnCreation(): bool
     {
