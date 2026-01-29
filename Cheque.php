@@ -13,6 +13,7 @@
 namespace Cheque;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\HttpFoundation\Response;
 use Thelia\Core\Install\Database;
 use Thelia\Model\MessageQuery;
@@ -64,5 +65,13 @@ class Cheque extends AbstractPaymentModule
     public function manageStockOnCreation(): bool
     {
         return false;
+    }
+
+    public static function configureServices(ServicesConfigurator $servicesConfigurator): void
+    {
+        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
+            ->exclude([THELIA_MODULE_DIR . ucfirst(self::getModuleCode()). "/I18n/*"])
+            ->autowire(true)
+            ->autoconfigure(true);
     }
 }
