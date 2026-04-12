@@ -59,7 +59,7 @@ class SendPaymentConfirmationEmail extends BaseAction implements EventSubscriber
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             TheliaEvents::ORDER_UPDATE_STATUS => ['sendConfirmationEmail', 128],
