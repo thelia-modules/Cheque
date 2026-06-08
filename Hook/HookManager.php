@@ -14,9 +14,11 @@ namespace Cheque\Hook;
 
 use Cheque\Cheque;
 use Cheque\Form\ConfigurationForm;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Thelia\Core\Event\Hook\HookRenderEvent;
+use Thelia\Core\Form\TheliaFormFactory;
 use Thelia\Core\Hook\BaseHook;
+use Thelia\Core\Template\Parser\ParserResolver;
 
 /**
  * Class HookManager.
@@ -26,26 +28,36 @@ use Thelia\Core\Hook\BaseHook;
 class HookManager extends BaseHook
 {
     public function __construct(
-        private readonly FormFactoryInterface $formFactory,
+        private readonly TheliaFormFactory $formFactory,
+        ?EventDispatcherInterface $dispatcher = null,
+        ?ParserResolver $parserResolver = null,
     ) {
-        parent::__construct();
+        parent::__construct($dispatcher, $parserResolver);
+    }
+
+    public static function getSubscribedHooks(): array
+    {
+        return [
+            'module.configuration' => [
+                ['type' => 'back', 'method' => 'onModuleConfiguration'],
+            ],
+            'order-placed.additional-payment-info' => [
+                ['type' => 'front', 'method' => 'onAdditionalPaymentInfo'],
+            ],
+        ];
     }
 
     public function onModuleConfiguration(HookRenderEvent $event): void
     {
         $locale = $this->getLang()->getLocale();
 
-        $form = $this->formFactory->createNamed(
-            ConfigurationForm::getName(),
-            ConfigurationForm::class,
-            [
-                'payable_to' => Cheque::getConfigValue('payable_to', ''),
-                'instructions' => Cheque::getConfigValue('instructions', '', $locale),
-            ]
-        );
+        $form = $this->formFactory->createForm(ConfigurationForm::getName(), data: [
+            'payable_to' => Cheque::getConfigValue('payable_to', ''),
+            'instructions' => Cheque::getConfigValue('instructions', '', $locale),
+        ]);
 
         $event->add($this->render('module_configuration.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView()->getView(),
         ]));
     }
 

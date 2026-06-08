@@ -13,6 +13,7 @@
 namespace Cheque\Controller;
 
 use Cheque\Cheque;
+use Cheque\Form\ConfigurationForm;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
@@ -37,7 +38,7 @@ class ConfigureController extends BaseAdminController
         $ex = null;
 
         // Create the Form from the request
-        $configurationForm = $this->createForm('cheque.instructions.configure');
+        $configurationForm = $this->createForm(ConfigurationForm::getName());
 
         try {
             // Check the form against constraints violations
