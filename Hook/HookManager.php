@@ -12,6 +12,9 @@
 
 namespace Cheque\Hook;
 
+use Cheque\Cheque;
+use Cheque\Form\ConfigurationForm;
+use Symfony\Component\Form\FormFactoryInterface;
 use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
 
@@ -22,6 +25,30 @@ use Thelia\Core\Hook\BaseHook;
  */
 class HookManager extends BaseHook
 {
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+    ) {
+        parent::__construct();
+    }
+
+    public function onModuleConfiguration(HookRenderEvent $event): void
+    {
+        $locale = $this->getLang()->getLocale();
+
+        $form = $this->formFactory->createNamed(
+            ConfigurationForm::getName(),
+            ConfigurationForm::class,
+            [
+                'payable_to' => Cheque::getConfigValue('payable_to', ''),
+                'instructions' => Cheque::getConfigValue('instructions', '', $locale),
+            ]
+        );
+
+        $event->add($this->render('module_configuration.html.twig', [
+            'form' => $form->createView(),
+        ]));
+    }
+
     public function onAdditionalPaymentInfo(HookRenderEvent $event): void
     {
         $content = $this->render('order-placed.additional-payment-info.html', [
