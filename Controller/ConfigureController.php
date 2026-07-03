@@ -15,6 +15,7 @@ namespace Cheque\Controller;
 use Cheque\Cheque;
 use Cheque\Form\ConfigurationForm;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
@@ -28,6 +29,7 @@ use Thelia\Tools\URL;
  */
 class ConfigureController extends BaseAdminController
 {
+    #[Route('/admin/cheque/configure', name: 'cheque.configure', methods: ['POST'])]
     public function configure()
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'Cheque', AccessManager::UPDATE)) {
