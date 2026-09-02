@@ -59,10 +59,15 @@ class SendPaymentConfirmationEmail extends BaseAction implements EventSubscriber
         }
     }
 
+    /**
+     * Runs below Thelia\Action\Order::updateStatus(), which is the listener that writes
+     * the new status on the order: whether the order is paid for is read from the order
+     * itself, so the answer is only the new one once that listener has been through.
+     */
     public static function getSubscribedEvents(): array
     {
         return [
-            TheliaEvents::ORDER_UPDATE_STATUS => ['sendConfirmationEmail', 128],
+            TheliaEvents::ORDER_UPDATE_STATUS => ['sendConfirmationEmail', 100],
         ];
     }
 }
