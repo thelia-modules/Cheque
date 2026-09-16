@@ -13,6 +13,8 @@
 namespace Cheque;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\HttpFoundation\Response;
 use Thelia\Core\Install\Database;
@@ -46,6 +48,24 @@ class Cheque extends AbstractPaymentModule
 
         // Insert email message
         $database->insertSql(null, [__DIR__.'/Config/setup.sql']);
+    }
+
+    public function update($currentVersion, $newVersion, ?ConnectionInterface $con = null): void
+    {
+        $finder = Finder::create()
+            ->name('*.sql')
+            ->depth(0)
+            ->sortByName()
+            ->in(__DIR__.'/Config/update');
+
+        $database = new Database($con);
+
+        /** @var SplFileInfo $file */
+        foreach ($finder as $file) {
+            if (version_compare($currentVersion, $file->getBasename('.sql'), '<')) {
+                $database->insertSql(null, [$file->getPathname()]);
+            }
+        }
     }
 
     public function destroy(?ConnectionInterface $con = null, $deleteModuleData = false): void
