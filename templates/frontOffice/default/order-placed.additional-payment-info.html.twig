@@ -1,0 +1,29 @@
+{#
+    How to pay an order by cheque, on the confirmation page of a Twig theme (theme hook
+    order-placed.additional-payment-info). A theme words it its own way with
+    modules/Cheque/order-placed.additional-payment-info.html.twig in its folder.
+
+    order               the order placed
+    payable_to          whom the cheque is made payable to (module configuration), may be empty
+    payable_to_sentence the sentence that names it, translated, markup included, the name escaped
+    store_address       the lines of the address of the shop
+    sign_reminder       the reminder to sign the cheque, translated
+    instructions        the instructions of the module configuration in the language of the page, markup included
+#}
+<div class="ChequeInstructions">
+    {% if payable_to_sentence %}
+        <p>{{ payable_to_sentence|raw }}</p>
+    {% endif %}
+
+    {% if store_address is not empty %}
+        <blockquote>
+            {% for line in store_address %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+        </blockquote>
+    {% endif %}
+
+    <p>{{ sign_reminder }}</p>
+
+    {% if instructions %}
+        <div>{{ instructions|raw }}</div>
+    {% endif %}
+</div>
