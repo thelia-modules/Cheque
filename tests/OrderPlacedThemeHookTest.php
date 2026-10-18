@@ -16,6 +16,8 @@ namespace Cheque\Tests;
 
 use Cheque\Cheque;
 use Cheque\Hook\Theme\OrderPlacedThemeHook;
+use Propel\Runtime\ActiveQuery\Criteria;
+use Thelia\Model\ModuleQuery;
 use Thelia\Test\IntegrationTestCase;
 use TwigEngine\Service\ThemeHookRenderer;
 
@@ -53,7 +55,10 @@ final class OrderPlacedThemeHookTest extends IntegrationTestCase
     {
         Cheque::setConfigValue('payable_to', 'ACME SAS');
 
-        self::assertSame('', trim($this->renderHook($this->createFixtureFactory()->order(overrides: ['paymentModuleCode' => 'TransferPayment']))));
+        $otherPaymentModule = ModuleQuery::create()->filterByCode('Cheque', Criteria::NOT_EQUAL)->findOne();
+        self::assertNotNull($otherPaymentModule, 'A module other than Cheque is installed.');
+
+        self::assertSame('', trim($this->renderHook($this->createFixtureFactory()->order(overrides: ['paymentModuleCode' => $otherPaymentModule->getCode()]))));
     }
 
     public function testNoOrderGetsNothing(): void
