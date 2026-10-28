@@ -21,8 +21,9 @@ use Thelia\Core\Install\Database;
 use Thelia\Model\MessageQuery;
 use Thelia\Model\Order;
 use Thelia\Module\AbstractPaymentModule;
+use Thelia\Module\BalanceChargingPaymentModuleInterface;
 
-class Cheque extends AbstractPaymentModule
+class Cheque extends AbstractPaymentModule implements BalanceChargingPaymentModuleInterface
 {
     public const MESSAGE_DOMAIN = 'cheque';
 
