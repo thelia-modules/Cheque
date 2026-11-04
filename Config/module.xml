@@ -7,14 +7,14 @@
         <title>Cheque</title>
     </descriptive>
     <descriptive locale="fr_FR">
-        <title>Cheque</title>
+        <title>Chèque</title>
     </descriptive>
     <images-folder>images</images-folder>
     <languages>
         <language>en_US</language>
         <language>fr_FR</language>
     </languages>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <author>
         <name>Manuel Raynaud</name>
         <email>manu@raynaud.io</email>
